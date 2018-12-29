@@ -1,9 +1,11 @@
 const mongoose = require('mongoose');
 
 const artSchema = new mongoose.Schema({
-    artTitle: String,
-    artContent: String,
+    title: String,
+    content: String,
     userId: String,
+    nickName: String,
+    avatarUrl: String,
     artCreateTime: {
         type: Date,
         default: Date.now()
