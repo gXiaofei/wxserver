@@ -3,6 +3,7 @@ var router = express.Router();
 var artModel = require('../model/artModel');
 var userModel = require('../model/userModel');
 var async = require('async');
+var moment = require('moment');
 
 // 按分页查询
 router.get('/info', function(req, res) {
@@ -14,6 +15,10 @@ router.get('/info', function(req, res) {
             return console.log(error);
         }else{
             // 请求的页数 不能大于总页数
+            if(result.pageCount === 0){
+                res.send(result);
+                return;
+            }
             if(result.pageNumber <= result.pageCount){
                 res.send(result);
             }else{
@@ -25,6 +30,7 @@ router.get('/info', function(req, res) {
 // 新增
 router.post('/write', function(req, res) {
     var data = req.body;
+    data.artCreateTime = new Date();
     var _model = new artModel({
         ...data
     });
@@ -33,6 +39,18 @@ router.post('/write', function(req, res) {
         if(err) return console.log(err);
         res.send(result);
     })
+})
+// 获取详情
+router.get('/detail', function (req, res){
+    const id = req.query.id
+    if(id){
+        artModel.findOne({_id: id}, function (err, data) {
+            if(err) return console.log(err); 
+            res.send(data);
+        })
+    }else{
+        res.send('id传入有误')
+    }
 })
 
 // 分页
